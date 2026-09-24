@@ -1,0 +1,19 @@
+From: security-alert@example.com
+To: analyst@example.com
+Subject: Urgent: Verify Your Account Immediately
+Reply-To: account-verification@fake-login.example
+Date: Wed, 23 Sep 2026 23:30:00 +0530
+Message-ID: <soc-lab-001@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+
+Dear User,
+
+Your account requires immediate verification.
+
+Please review your account information as soon as possible.
+
+This is a controlled SOC lab email for testing the Phishing Email Analyzer.
+
+Regards,
+Security Team

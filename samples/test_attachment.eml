@@ -1,0 +1,27 @@
+From: security-alert@example.com
+To: analyst@example.com
+Subject: Important Security Document
+Date: Wed, 23 Sep 2026 23:55:00 +0530
+Message-ID: <soc-lab-003@example.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="SOCBOUNDARY"
+
+--SOCBOUNDARY
+Content-Type: text/plain; charset="UTF-8"
+
+Dear User,
+
+Please review the attached security document.
+
+This is a controlled SOC lab email for attachment-analysis testing.
+
+Regards,
+Security Team
+
+--SOCBOUNDARY
+Content-Type: text/plain; name="security_report.txt"
+Content-Disposition: attachment; filename="security_report.txt"
+
+This is a harmless controlled lab attachment.
+
+--SOCBOUNDARY--

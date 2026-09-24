@@ -1,0 +1,19 @@
+From: security-alert@example.com
+To: analyst@example.com
+Subject: Security Verification Required
+Date: Wed, 23 Sep 2026 23:45:00 +0530
+Message-ID: <soc-lab-002@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+
+Dear User,
+
+Your account needs verification.
+
+Please visit the following link:
+https://secure-login.example.com/verify
+
+This is a controlled SOC lab email for testing URL analysis.
+
+Regards,
+Security Team

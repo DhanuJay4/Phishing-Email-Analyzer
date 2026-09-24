@@ -1,0 +1,32 @@
+From: security-alert@example.com
+To: analyst@example.com
+Reply-To: verification@fake-login.example
+Subject: URGENT - Verify Your Account Immediately
+Date: Thu, 24 Sep 2026 01:00:00 +0530
+Message-ID: <soc-lab-005@example.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="COMBINEDBOUNDARY"
+
+--COMBINEDBOUNDARY
+Content-Type: text/plain; charset="UTF-8"
+
+Dear User,
+
+URGENT: Your account has been suspended.
+
+Verify your account immediately using the following link:
+
+http://192.0.2.10/verify
+
+This is a controlled SOC lab email for testing the combined analyzer.
+
+Regards,
+Security Team
+
+--COMBINEDBOUNDARY
+Content-Type: application/octet-stream
+Content-Disposition: attachment; filename="account_update.exe"
+
+CONTROLLED-LAB-ATTACHMENT
+
+--COMBINEDBOUNDARY--
