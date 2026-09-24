@@ -1,27 +1,38 @@
 # Phishing Email Analyzer
 
-A Python-based cybersecurity tool that analyzes `.eml` email files and identifies common phishing indicators using header analysis, text analysis, URL heuristics, attachment analysis, and a transparent risk-scoring model.
+A Python-based cybersecurity tool that analyzes `.eml` email files for common phishing indicators and generates structured risk-assessment reports.
 
-## Project Overview
+The project is designed as a defensive security analysis tool for learning, SOC-style investigation, and controlled phishing-email detection.
 
-Phishing emails often use techniques such as:
-
-- Sender and Reply-To mismatches
-- Urgency or threat-based language
-- Suspicious URLs
-- IP-address-based URLs
-- Potentially risky attachment types
-
-This project automates the initial analysis of an email and generates both machine-readable and analyst-friendly reports.
+---
 
 ## Features
 
-### Email Header Analysis
+- 📧 Email header analysis
+- 🔍 From / Reply-To domain mismatch detection
+- ⚠️ Urgency and threat-language detection
+- 🔗 URL extraction from email content
+- 🌐 Suspicious URL characteristic detection
+- 📎 Email attachment analysis
+- 🚨 Risky attachment extension detection
+- 📊 Heuristic phishing risk scoring
+- 📝 JSON report generation
+- 🌐 HTML report generation
+- 💻 Command-line interface
+- 🧪 Automated unit tests
 
-Extracts:
+---
 
-- From
-- To
+## How It Works
+
+The analyzer processes a `.eml` email file and examines several characteristics.
+
+### 1. Header Analysis
+
+The tool extracts:
+
+- Sender
+- Recipient
 - Reply-To
 - Subject
 - Date
@@ -29,33 +40,38 @@ Extracts:
 - Sender domain
 - Reply-To domain
 
-### Phishing Indicator Detection
+It checks whether the sender and Reply-To domains are different.
 
-Detects:
+### 2. Urgency / Threat Detection
 
-- From/Reply-To domain mismatch
-- Urgency and threat-related keywords
-- URLs in the email body
-- Suspicious URL characteristics
-- Email attachments
-- Potentially risky attachment extensions
+The analyzer checks the subject and email body for predefined urgency or threat-related phrases such as:
 
-### URL Analysis
+- `urgent`
+- `immediately`
+- `verify your account`
+- `action required`
+- `suspended`
+- `account locked`
+- `security alert`
 
-The analyzer checks for characteristics such as:
+### 3. URL Analysis
 
-- IP address used instead of a domain
-- `@` symbol in the URL
-- Unusually long URLs
-- Non-standard URL schemes
+URLs are extracted from the email body.
 
-These are heuristic indicators and do not by themselves prove that a URL is malicious.
+The analyzer checks for suspicious characteristics such as:
 
-### Attachment Analysis
+- IP addresses used instead of domain names
+- `@` characters
+- unusually long URLs
+- non-standard URL schemes
 
-The tool identifies attachments and checks their extensions against a configurable list of potentially risky file types.
+Detecting a URL does **not** automatically mean that the URL is malicious.
 
-Examples include:
+### 4. Attachment Analysis
+
+Email attachments are identified and analyzed.
+
+The current risky-extension list includes:
 
 ```text
 .exe
@@ -66,3 +82,6 @@ Examples include:
 .vbs
 .ps1
 .msi
+.hta
+.jar
+.com
