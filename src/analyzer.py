@@ -32,6 +32,61 @@ def extract_urls(text):
     url_pattern = r"https?://[^\s<>\"]+"
     return re.findall(url_pattern, text)
 
+def extract_iocs(text, urls, attachments):
+    """Extract common indicators of compromise from email content."""
+    iocs = {
+        "urls": urls,
+        "ip_addresses": [],
+        "domains": [],
+        "email_addresses": [],
+        "attachments": []
+    }
+
+    # Extract IPv4 addresses
+    ip_pattern = r"\b(?:\d{1,3}\.){3}\d{1,3}\b"
+
+    for ip in re.findall(ip_pattern, text):
+        try:
+            ipaddress.ip_address(ip)
+
+            if ip not in iocs["ip_addresses"]:
+                iocs["ip_addresses"].append(ip)
+
+        except ValueError:
+            pass
+
+    # Extract email addresses
+    email_pattern = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"
+
+    for email_address in re.findall(email_pattern, text):
+        if email_address not in iocs["email_addresses"]:
+            iocs["email_addresses"].append(email_address)
+
+    # Extract domains from URLs
+    for url in urls:
+        try:
+            hostname = urlparse(url).hostname
+
+            if hostname:
+                try:
+                    ipaddress.ip_address(hostname)
+                except ValueError:
+                    if hostname not in iocs["domains"]:
+                        iocs["domains"].append(hostname)
+
+        except ValueError:
+            pass
+
+    # Add attachment filenames
+    for attachment in attachments:
+        filename = attachment.get("filename")
+
+        if filename and filename not in iocs["attachments"]:
+            iocs["attachments"].append(filename)
+
+    return iocs
+
+
 
 def analyze_url(url):
     """Check a URL for suspicious characteristics."""
@@ -170,6 +225,28 @@ def generate_html_report(report, output_path):
             <td colspan="3">No attachments detected.</td>
         </tr>
         """
+
+    # IOC analysis
+    ioc_rows = ""
+
+    for category, values in report["iocs"].items():
+        if values:
+            for value in values:
+                ioc_rows += f"""
+                <tr>
+                    <td>{esc(category)}</td>
+                    <td>{esc(value)}</td>
+                </tr>
+                """
+
+    if not ioc_rows:
+        ioc_rows = """
+        <tr>
+            <td colspan="2">No IOCs extracted.</td>
+        </tr>
+        """
+
+    score_rows = ""
 
     score_rows = ""
 
@@ -324,6 +401,16 @@ code {{
 {url_rows}
 </table>
 
+    <h2>IOC Analysis</h2>
+
+    <table>
+    <tr>
+        <th>Type</th>
+        <th>Indicator</th>
+    </tr>
+    {ioc_rows}
+    </table>
+
 <h2>Attachment Analysis</h2>
 
 <table>
@@ -404,6 +491,7 @@ def analyze_email(file_path):
 
     urls = extract_urls(body_text)
     attachments = analyze_attachments(message)
+    iocs = extract_iocs(body_text, urls, attachments)
 
     risk_score = 0
     alerts = []
@@ -514,6 +602,7 @@ def analyze_email(file_path):
         "urls": urls,
         "suspicious_url_findings": suspicious_url_findings,
         "attachments": attachments,
+        "iocs": iocs,
         "detected_indicators": alerts,
         "score_breakdown": score_reasons,
         "risk_score": risk_score,
@@ -522,7 +611,7 @@ def analyze_email(file_path):
 
     # Terminal output
     print("\n" + "=" * 60)
-    print("        PHISHING EMAIL ANALYZER - V10")
+    print("        PHISHING EMAIL ANALYZER - V12")
     print("=" * 60)
 
     print(f"From     : {from_address or 'Not found'}")
