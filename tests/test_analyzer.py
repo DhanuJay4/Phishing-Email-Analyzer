@@ -41,5 +41,14 @@ class TestPhishingAnalyzer(unittest.TestCase):
         self.assertEqual(get_severity(100), "CRITICAL")
 
 
+    def test_combined_email_file_exists(self):
+        sample_file = (
+            Path(__file__).resolve().parent.parent
+            / "samples"
+            / "test_combined.eml"
+        )
+
+        self.assertTrue(sample_file.exists())
+        self.assertEqual(sample_file.suffix.lower(), ".eml")
 if __name__ == "__main__":
     unittest.main()
