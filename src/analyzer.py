@@ -533,9 +533,18 @@ def analyze_email(file_path):
 
 
 if __name__ == "__main__":
+    import argparse
 
-    if len(sys.argv) != 2:
-        print("Usage: python src\\analyzer.py <email.eml>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        description="Phishing Email Analyzer - Analyze .eml files for phishing indicators."
+    )
 
-    analyze_email(sys.argv[1])
+    parser.add_argument(
+        "--file",
+        required=True,
+        help="Path to the .eml email file to analyze."
+    )
+
+    args = parser.parse_args()
+
+    analyze_email(args.file)
