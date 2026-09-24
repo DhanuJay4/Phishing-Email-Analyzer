@@ -1,0 +1,14 @@
+From: Microsoft Security <security-alert@example.com>
+To: analyst@example.com
+Reply-To: verification@fake-login.example
+Return-Path: <bounce@example.com>
+Authentication-Results: mail.example.com; spf=pass; dkim=pass; dmarc=fail
+Subject: Security Verification Required
+Date: Thu, 24 Sep 2026 02:00:00 +0530
+Message-ID: <soc-lab-auth-001@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+
+This is a controlled SOC lab email for testing authentication header analysis.
+
+Please review the authentication results.

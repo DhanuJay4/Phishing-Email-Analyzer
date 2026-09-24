@@ -1,0 +1,14 @@
+From: Security Alert <security-alert@example.com>
+To: analyst@example.com
+Reply-To: verification@fake-login.example
+Return-Path: <bounce@attacker.example>
+Authentication-Results: mail.example.com; spf=fail; dkim=fail; dmarc=fail
+Subject: URGENT - Account Suspended
+Date: Thu, 24 Sep 2026 02:30:00 +0530
+Message-ID: <soc-lab-auth-fail-001@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+
+This is a controlled SOC lab email for testing authentication failures.
+
+Your account has been suspended. Verify your account immediately.

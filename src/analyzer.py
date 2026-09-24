@@ -293,6 +293,10 @@ code {{
 <tr><td>Reply-To</td><td>{esc(report["reply_to"])}</td></tr>
 <tr><td>Sender Domain</td><td>{esc(report["sender_domain"])}</td></tr>
 <tr><td>Reply-To Domain</td><td>{esc(report["reply_to_domain"])}</td></tr>
+<tr><td>Return-Path</td><td>{esc(report["return_path"])}</td></tr>
+<tr><td>SPF</td><td>{esc(report["spf"])}</td></tr>
+<tr><td>DKIM</td><td>{esc(report["dkim"])}</td></tr>
+<tr><td>DMARC</td><td>{esc(report["dmarc"])}</td></tr>
 <tr><td>Subject</td><td>{esc(report["subject"])}</td></tr>
 <tr><td>Date</td><td>{esc(report["date"])}</td></tr>
 <tr><td>Message-ID</td><td>{esc(report["message_id"])}</td></tr>
@@ -360,9 +364,31 @@ def analyze_email(file_path):
     from_address = message.get("From", "")
     to_address = message.get("To", "")
     reply_to = message.get("Reply-To", "")
+    return_path = message.get("Return-Path", "")
+    authentication_results = message.get("Authentication-Results", "")
     subject = message.get("Subject", "")
     date = message.get("Date", "")
     message_id = message.get("Message-ID", "")
+
+    # Email authentication results
+    spf_result = "Not found"
+    dkim_result = "Not found"
+    dmarc_result = "Not found"
+
+    auth_text = authentication_results.lower()
+
+    spf_match = re.search(r"\bspf=(\w+)", auth_text)
+    dkim_match = re.search(r"\bdkim=(\w+)", auth_text)
+    dmarc_match = re.search(r"\bdmarc=(\w+)", auth_text)
+
+    if spf_match:
+        spf_result = spf_match.group(1)
+
+    if dkim_match:
+        dkim_result = dkim_match.group(1)
+
+    if dmarc_match:
+        dmarc_result = dmarc_match.group(1)
 
     from_domain = get_domain(from_address)
     reply_domain = get_domain(reply_to)
@@ -389,6 +415,16 @@ def analyze_email(file_path):
         alerts.append("From and Reply-To domains do not match.")
         risk_score += 25
         score_reasons.append("From/Reply-To mismatch: +25")
+
+     # Email authentication checks
+    if spf_result.lower() == "fail":
+        alerts.append("SPF authentication failed.")
+
+    if dkim_result.lower() == "fail":
+        alerts.append("DKIM authentication failed.")
+
+    if dmarc_result.lower() == "fail":
+        alerts.append("DMARC authentication failed.")
 
     # Urgency language
     urgency_keywords = [
@@ -465,6 +501,11 @@ def analyze_email(file_path):
         "sender": from_address,
         "recipient": to_address,
         "reply_to": reply_to,
+        "return_path": return_path,
+        "authentication_results": authentication_results,
+        "spf": spf_result,
+        "dkim": dkim_result,
+        "dmarc": dmarc_result,
         "subject": subject,
         "date": date,
         "message_id": message_id,
@@ -487,6 +528,10 @@ def analyze_email(file_path):
     print(f"From     : {from_address or 'Not found'}")
     print(f"To       : {to_address or 'Not found'}")
     print(f"Reply-To : {reply_to or 'Not found'}")
+    print(f"Return-Path: {return_path or 'Not found'}")
+    print(f"SPF       : {spf_result}")
+    print(f"DKIM      : {dkim_result}")
+    print(f"DMARC     : {dmarc_result}")
     print(f"Subject  : {subject or 'Not found'}")
     print(f"Date     : {date or 'Not found'}")
     print(f"Message-ID: {message_id or 'Not found'}")
